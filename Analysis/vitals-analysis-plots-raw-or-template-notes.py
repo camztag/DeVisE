@@ -7,6 +7,8 @@
 # Group-wise average JSD comparisons - ttests & wilcoxon signed-rank test
 ##########################################################################################################
 
+import argparse
+import os
 import matplotlib.pyplot as plt
 import seaborn as sns
 import json
@@ -16,25 +18,35 @@ import ast
 from scipy.stats import ttest_rel, wilcoxon
 from scipy.spatial.distance import jensenshannon
 
-full_data = []
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--results_dir", required=True, help="Directory with result JSONL files")
+parser.add_argument("--shift_path", required=True, help="Path to shift_key JSON file")
+parser.add_argument("--output_dir", default=".", help="Directory to save outputs")
+args = parser.parse_args()
 
 result_files = {
-    "dsR1(FT)": "/Users/camila.tagliabue@goflink.com/OneDrive - UvA/SRP/results/los_results_deepseekR1.jsonl",
-    "dsR1(ZS)": "/Users/camila.tagliabue@goflink.com/OneDrive - UvA/SRP/results/0s_results_deepseekR1.jsonl",
-    "llama3(FT)": "/Users/camila.tagliabue@goflink.com/OneDrive - UvA/SRP/results/los_results_llama370.jsonl",
-    "llama3(ZS)": "/Users/camila.tagliabue@goflink.com/OneDrive - UvA/SRP/results/0s_results_llama370.jsonl",
-    "phi4(FT)": "/Users/camila.tagliabue@goflink.com/OneDrive - UvA/SRP/results/los_results_phi4.jsonl",
-    "phi4(ZS)": "/Users/camila.tagliabue@goflink.com/OneDrive - UvA/SRP/results/0s_results_phi4.jsonl",
-    "obllm(FT)": "/Users/camila.tagliabue@goflink.com/OneDrive - UvA/SRP/results/los_results_obllm.jsonl",
-    "obllm(ZS)": "/Users/camila.tagliabue@goflink.com/OneDrive - UvA/SRP/results/0s_results_obllm.jsonl",
-    "meditron(ZS)": "/Users/camila.tagliabue@goflink.com/OneDrive - UvA/SRP/results/0s_results_meditron.jsonl"
+    "dsR1(FT)": "los_results_deepseekR1.jsonl",
+    "dsR1(ZS)": "0s_results_deepseekR1.jsonl",
+    "llama3(FT)": "los_results_llama370.jsonl",
+    "llama3(ZS)": "0s_results_llama370.jsonl",
+    "phi4(FT)": "los_results_phi4.jsonl",
+    "phi4(ZS)": "0s_results_phi4.jsonl",
+    "obllm(FT)": "los_results_obllm.jsonl",
+    "obllm(ZS)": "0s_results_obllm.jsonl",
+    "meditron(ZS)": "0s_results_meditron.jsonl"
 }
+result_files = {k: os.path.join(args.results_dir, v) for k, v in result_files.items()}
+
+
+full_data = []
+
 
 shift_path = "/Users/camila.tagliabue@goflink.com/OneDrive - UvA/SRP/results/shift_key2.json"
 
 for model_name, result_path in result_files.items():
-    print(f"Processing {model_name} for full dataframe...")
-    with open(shift_path, 'r') as f:
+    print(f"Processing {model_name}...")
+    with open(args.shift_path, 'r') as f:
         shift_data = json.load(f)
 
     cf_entries = []
@@ -97,7 +109,7 @@ for model_name, result_path in result_files.items():
     full_data.append(cf_merged[["hadm_id", "abs_sev", "ΔE", "abs_L1_shift", "js_divergence", "model"]])
 
 df_all = pd.concat(full_data, ignore_index=True)
-df_all.to_csv("full_counterfactual_analysis_all_models.csv", index=False)
+df_all.to_csv(os.path.join(args.output_dir, "full_counterfactual_analysis_all_models.csv"), index=False)
 
 #---------------------------------------------------------------------------------------
 plt.rcParams.update({
