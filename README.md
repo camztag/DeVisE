@@ -37,7 +37,7 @@ Pipeline flow:
 Recommended working layout:
 
 ```text
-Repository-26/
+DeVisE/
 ├── README.md
 ├── project_context.md
 ├── run_section1.sh
