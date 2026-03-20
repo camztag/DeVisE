@@ -1,0 +1,9 @@
+numpy>=1.26
+pandas>=2.2
+tqdm>=4.66
+matplotlib>=3.8
+scikit-learn>=1.5
+scipy>=1.13
+openai>=1.59
+transformers>=4.47
+vllm>=0.12,<0.13

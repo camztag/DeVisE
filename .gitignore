@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+.venv/
+env/
+venv/
+
+data/
+experiment_results/
+plots/
+
+*.log
+.DS_Store
+.ipynb_checkpoints/
+
+.env

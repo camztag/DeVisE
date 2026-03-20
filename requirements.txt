@@ -1,0 +1,7 @@
+numpy>=1.26
+pandas>=2.2
+tqdm>=4.66
+matplotlib>=3.8
+scikit-learn>=1.5
+scipy>=1.13
+vllm>=0.6,<0.7
